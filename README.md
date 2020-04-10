@@ -1,2 +1,2 @@
 # ml
-My struggle to harness the power of machine learning.
+Different ml algos implemented from scratch
