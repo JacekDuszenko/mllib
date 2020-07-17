@@ -1,2 +1,4 @@
-# ml
-Different ml algos implemented from scratch
+# mllib
+
+Library of classical machine learning algorithms written in C++ with bindings in Python
+
