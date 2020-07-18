@@ -20,11 +20,7 @@ namespace Mllib {
         void IngestData(Dataset dps);
 
         double FindKnn(std::vector<double> &vec);
-
-        virtual ~Knn();
-
     };
 
-    Knn::~Knn() = default;
 }
 #endif //KNN_KNN_H

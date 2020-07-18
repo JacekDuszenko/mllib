@@ -31,8 +31,14 @@ add_library(knn SHARED Knn.cpp Knn.h)
 install(TARGETS knn DESTINATION knn)
 install(FILES Knn.h DESTINATION include/knn)
 
-add_executable(runUnitTests test/knn_test.cpp)
+add_library(knn_test_util STATIC test/knn_test_util.cpp)
+
+add_executable(runUnitTests
+        test/knn_basic_test.cpp
+        test/knn_proximity_test.cpp
+        test/knn_test_util.h)
 target_include_directories(runUnitTests BEFORE PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(runUnitTests gtest gtest_main knn)
+target_include_directories(runUnitTests BEFORE PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/test)
+target_link_libraries(runUnitTests gtest gtest_main knn knn_test_util)
 
 add_test(runUnitTests runUnitTests)

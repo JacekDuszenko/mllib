@@ -2,7 +2,6 @@
 
 #include <numeric>
 #include <cmath>
-#include <iostream>
 
 #define min(A, B) (A > B ? B : A)
 
