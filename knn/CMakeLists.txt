@@ -28,8 +28,11 @@ endif()
 
 add_library(knn SHARED Knn.cpp Knn.h)
 
-add_executable(knn_tests test/test.cpp)
-target_link_libraries(knn_tests gtest_main knn)
-
 install(TARGETS knn DESTINATION knn)
 install(FILES Knn.h DESTINATION include/knn)
+
+add_executable(runUnitTests test/knn_test.cpp)
+target_include_directories(runUnitTests BEFORE PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(runUnitTests gtest gtest_main knn)
+
+add_test(runUnitTests runUnitTests)

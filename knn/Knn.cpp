@@ -2,41 +2,42 @@
 
 #include <numeric>
 #include <cmath>
+#include <iostream>
 
-#define min(A, B) (A > B ? A : B)
+#define min(A, B) (A > B ? B : A)
 
 Mllib::Knn::Knn(int vector_dim, int k) : vector_dimension(vector_dim), k(k) {}
 
-void Mllib::Knn::IngestData(Mllib::DataPoints dps) {
-    this->data_points = std::move(dps);
+void Mllib::Knn::IngestData(Mllib::Dataset dps) {
+    this->data_set = std::move(dps);
 }
 
-std::function<bool(std::vector<double> &, std::vector<double> &)> euclid(const std::vector<double> &vec) {
-    auto comparator_fun = [&vec](std::vector<double> &fst, std::vector<double> &snd) {
+typedef std::pair<std::vector<double>, double> &DataPair;
+
+std::function<bool(DataPair, DataPair)> euclid(const std::vector<double> &vec) {
+    auto comparator_fun = [&vec](DataPair fst, DataPair snd) {
         double fst_d{0.0};
         double snd_d{0.0};
-        for (int i = 0; i < fst.size(); ++i) {
-            fst_d += pow(vec.at(i) - fst.at(i), 2);
-            snd_d += pow(vec.at(i) - snd.at(i), 2);
+        for (int i = 0; i < fst.first.size(); ++i) {
+            fst_d += pow(vec.at(i) - fst.first.at(i), 2);
+            snd_d += pow(vec.at(i) - snd.first.at(i), 2);
         }
-        return sqrt(fst_d) > sqrt(snd_d);
+        return sqrt(fst_d) < sqrt(snd_d);
     };
     return comparator_fun;
 }
 
-std::vector<double> Mllib::Knn::FindKnn(std::vector<double> &vec) {
+double Mllib::Knn::FindKnn(std::vector<double> &vec) {
     auto cmp = euclid(vec);
-    std::sort(data_points.begin(), data_points.end(), cmp);
+    std::sort(data_set.begin(), data_set.end(), cmp);
     int iter = 0;
-    std::vector<double> avg(data_points[0].size(), 0.0);
-    int iter_elems = min(data_points.size(), k);
+    double avg = 0;
+    int iter_elems = min(data_set.size(), k);
     while (iter < iter_elems) {
-        auto &elem = data_points.at(iter);
-        for (int i = 0; i < elem.size(); ++i) {
-            avg[i] += elem[i];
-        }
+        auto &elem = data_set.at(iter);
+        avg += elem.second;
         ++iter;
     }
-    std::transform(avg.begin(), avg.end(), avg.begin(), [iter_elems](auto &e) { return e / iter_elems; });
+    avg /= iter_elems;
     return avg;
 }
