@@ -14,7 +14,7 @@ namespace Mllib {
 
 
     public:
-        Knn(int vectorDimension, int k);
+        Knn(int vector_dim, int k);
 
         void IngestData(DataPoints dps);
 
